@@ -25,7 +25,7 @@ public class Product {
     private Float Price;
     private Float Weight;
     @Column(length = 65555)
-    private byte[] Img;
+    private String Img;
 
     @OneToMany(mappedBy = "products")
     private List<CartDetalis> list;

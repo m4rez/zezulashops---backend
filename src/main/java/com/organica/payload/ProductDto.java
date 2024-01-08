@@ -15,5 +15,5 @@ public class ProductDto {
     private String Description;
     private Float Price;
     private Float Weight;
-    private byte[] Img;
+    private String Img;
 }

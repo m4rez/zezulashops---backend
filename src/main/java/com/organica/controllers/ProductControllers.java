@@ -28,7 +28,7 @@ public class ProductControllers {
         productDto.setDescription(formData.getFirst("description"));
         productDto.setWeight(Float.valueOf(formData.getFirst("weight")));
         productDto.setPrice(Float.valueOf(formData.getFirst("price")));
-        productDto.setImg(file.getBytes());
+        productDto.setImg("C:\\Users\\ma43k\\IdeaProjects\\React Teamplate\\Client\\public\\images\\product\\EDA005225701A.jpg");
 
         ProductDto save = this.productService.CreateProduct(productDto);
 
@@ -70,7 +70,7 @@ public class ProductControllers {
         productDto.setDescription(formData.getFirst("description"));
         productDto.setWeight(Float.valueOf(formData.getFirst("weight")));
         productDto.setPrice(Float.valueOf(formData.getFirst("price")));
-        productDto.setImg(file.getBytes());
+        productDto.setImg("C:\\Users\\ma43k\\Plocha\\EDA005225701A.jpg");
 
         ProductDto save = this.productService.UpdateProduct(productDto,ProductId);
 

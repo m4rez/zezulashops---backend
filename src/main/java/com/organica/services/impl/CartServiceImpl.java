@@ -100,7 +100,7 @@ public class CartServiceImpl implements CartService {
 
             for (CartDetailDto i:cartDetalis2 ) {
                 ProductDto p=i.getProducts();
-                p.setImg(decompressBytes(p.getImg()));
+                p.setImg("C:\\Users\\ma43k\\Plocha\\EDA005225701A.jpg");
             }
             map.setCartDetalis(cartDetalis2);
             return map;
@@ -149,7 +149,7 @@ public class CartServiceImpl implements CartService {
 
         for (CartDetailDto i:cartDetalis1 ) {
             ProductDto p=i.getProducts();
-            p.setImg(decompressBytes(p.getImg()));
+            p.setImg("C:\\Users\\ma43k\\Plocha\\EDA005225701A.jpg");
         }
         map.setCartDetalis(cartDetalis1);
         return map;
@@ -169,7 +169,7 @@ public class CartServiceImpl implements CartService {
 
         for (CartDetailDto i:cartDetalis1 ) {
             ProductDto p=i.getProducts();
-            p.setImg(decompressBytes(p.getImg()));
+            p.setImg("C:\\Users\\ma43k\\Plocha\\EDA005225701A.jpg");
         }
         map.setCartDetalis(cartDetalis1);
         return map;
@@ -203,7 +203,7 @@ public class CartServiceImpl implements CartService {
 
     public Product changeImg(Product product){
 
-        product.setImg(decompressBytes(product.getImg()));
+        product.setImg("C:\\Users\\ma43k\\Plocha\\EDA005225701A.jpg");
 
         System.out.println("hello");
         return product;

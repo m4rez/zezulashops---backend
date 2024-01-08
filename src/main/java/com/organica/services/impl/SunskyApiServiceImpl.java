@@ -4,6 +4,8 @@ package com.organica.services.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.organica.services.SunskyApiService;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,9 +19,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
 
+@Getter
+@Setter
 @Service
 public class SunskyApiServiceImpl implements SunskyApiService {
     @Value("${my.api.key}")
@@ -124,7 +130,10 @@ public class SunskyApiServiceImpl implements SunskyApiService {
             if (rc == 200) {
                 input = conn.getInputStream();
 
-                OutputStream fos = new FileOutputStream("D:\\test.zip");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS");
+                String timestamp = LocalDateTime.now().format(formatter);
+
+                OutputStream fos = new FileOutputStream("C:\\Users\\ma43k\\Plocha\\pic\\" + timestamp + ".zip");
                 try {
                     IOUtils.copy(input, fos);
                 } finally {
@@ -240,7 +249,7 @@ public class SunskyApiServiceImpl implements SunskyApiService {
         }
 
         // Fetch products
-        if (true) {
+        if (false) {
             String apiUrl = "https://open.sunsky-online.com/openapi/product!search.do";
 
             Map<String, String> parameters = new HashMap<String, String>();
@@ -275,50 +284,14 @@ public class SunskyApiServiceImpl implements SunskyApiService {
 
 
         }
-        if (true) {
-            String apiUrl = "https://open.sunsky-online.com/openapi/product!search.do";
-
-            Map<String, String> parameters = new HashMap<String, String>();
-            parameters.put("key", key);
-            parameters.put("categoryId", "100700");
-
-            String result = call(apiUrl, secret, parameters);
-            System.out.println(result);
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonResult = objectMapper.readTree(result);
-            if (! "success".equals(jsonResult.get("result").asText())) {
-                throw new Exception("Error: " + result);
-            }
-
-            JsonNode jsonListModel = jsonResult.get("data");
-            int pageCount = jsonListModel.get("pageCount").asInt();
-
-            for (int i = 0; i < pageCount; i++) {
-                parameters.put("page", Integer.toString(i + 1));
-                result = call(apiUrl, secret, parameters);
-
-                jsonResult = objectMapper.readTree(result);
-                System.out.println(jsonResult);
-                if (! "success".equals((jsonResult.get("result").asText()))) {
-                    throw new Exception("Error: " + result);
-                }
-                jsonListModel = jsonResult.get("data").get("result");
-                for (JsonNode productNode: jsonListModel){
-
-                }
-            }
-
-
-        }
 
         // Fetch the details for the product
         if (false) {
             String apiUrl = "https://open.sunsky-online.com/openapi/product!detail.do";
             Map<String, String> parameters = new HashMap<String, String>();
             parameters.put("key", key);
-            parameters.put("itemNo", "S-MPH-6016B");
-            System.out.println(call(apiUrl, secret, parameters));
+            parameters.put("itemNo", "EDA005225701A");
+            call(apiUrl, secret, parameters);
         }
 
         // Download the images

@@ -32,11 +32,11 @@ public class ProductServiceImpl implements ProductService {
     //Create
     @Override
     public ProductDto CreateProduct(ProductDto productDto) {
+
         Product product=this.modelMapper.map(productDto,Product.class);
-        product.setImg(compressBytes(product.getImg()));
 
         Product save = this.productRepo.save(product);
-        save.setImg(null);
+
         return this.modelMapper.map(save,ProductDto.class);
     }
 
@@ -45,8 +45,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto ReadProduct(Integer ProductId) {
 
         Product save = this.productRepo.findById(ProductId).orElseThrow();
-        save.setImg(decompressBytes(save.getImg()));
-
 
         return this.modelMapper.map(save,ProductDto.class);
     }
@@ -57,9 +55,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDto> ReadAllProduct() {
         List<Product> all = this.productRepo.findAll();
 
-
-        List<ProductDto> collect = all.stream().map(dto -> new ProductDto(dto.getProductId(), dto.getProductName(), dto.getDescription(), dto.getPrice(), dto.getWeight(), decompressBytes(dto.getImg()))).collect(Collectors.toList());
-
+        List<ProductDto> collect = all.stream().map(dto -> new ProductDto(dto.getProductId(), dto.getProductName(), dto.getDescription(), dto.getPrice(), dto.getWeight(), dto.getImg())).collect(Collectors.toList());
         return collect;
     }
 
