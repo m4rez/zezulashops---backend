@@ -1,41 +1,51 @@
 package com.organica.controllers;
 
-
-import com.organica.payload.PaymentDetails;
-import com.organica.services.PaymentService;
 import cz.gopay.api.v3.GPClientException;
 import cz.gopay.api.v3.IGPConnector;
 import cz.gopay.api.v3.impl.apacheclient.HttpClientGPConnector;
 import cz.gopay.api.v3.model.access.OAuth;
 import cz.gopay.api.v3.model.common.Currency;
-import cz.gopay.api.v3.model.payment.BasePayment;
-import cz.gopay.api.v3.model.payment.Lang;
-import cz.gopay.api.v3.model.payment.Payment;
-import cz.gopay.api.v3.model.payment.PaymentFactory;
+import cz.gopay.api.v3.model.payment.*;
 import cz.gopay.api.v3.model.payment.support.Payer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin
+import java.util.Scanner;
+
+
 @RestController
-@RequestMapping("/payment")
-public class PaymentController {
+@CrossOrigin
+@RequestMapping("")
+public class GoPayController {
+
+    IGPConnector connector;
+
     @Value("${gopay.api.id}")
     private String id;
     @Value("${gopay.api.secret}")
     private String secret;
 
-    @Autowired
-    private PaymentService paymentService;
 
-    @GetMapping("/{amount}")
-    public ResponseEntity<String> CreatePayment(@PathVariable Double amount) throws GPClientException{
-        String gwurl = "";
+    @GetMapping("/getCredentials")
+    public IGPConnector getCredentials() throws GPClientException {
+        IGPConnector connector = HttpClientGPConnector.build("https://gw.sandbox.gopay.com/api");
+        connector.getAppToken(id, secret).getAccessToken().getAccessToken();
+        return connector;
+    }
+    @GetMapping("/getCredentialss")
+    public IGPConnector getFullCredentials() throws GPClientException {
         IGPConnector connector = HttpClientGPConnector.build("https://gw.sandbox.gopay.com/api");
         connector.getAppToken(id, secret, OAuth.SCOPE_PAYMENT_ALL).getAccessToken().getAccessToken();
+        return connector;
+    }
+
+    @GetMapping("/pay")
+    public void pay() throws GPClientException {
+
+        IGPConnector connector = getFullCredentials();
         Payer payer = new Payer();
 
 
@@ -55,12 +65,22 @@ public class PaymentController {
             System.out.println(result.getId());
             System.out.println(result.getAmount());
             System.out.println(connector.paymentStatus(result.getId()));
-            gwurl = result.getGwUrl();
             ;
         } catch (GPClientException e) {
             System.out.println("nepovedlo");
         }
-        return new ResponseEntity<>(gwurl, HttpStatusCode.valueOf(200));
     }
 
+    @GetMapping("refund")
+    public void refund() throws GPClientException{
+
+        PaymentResult result = getFullCredentials().refundPayment(3220631869L, 5L);
+        System.out.println(result.getResult());
+    }
+    @GetMapping("check")
+    public void check() throws GPClientException{
+        IGPConnector connector = HttpClientGPConnector.build("https://gw.sandbox.gopay.com/api");
+        connector.getAppToken(id, secret).getAccessToken().getAccessToken();
+        System.out.println(connector.paymentStatus(3220631869L));
+    }
 }

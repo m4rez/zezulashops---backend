@@ -15,7 +15,7 @@ public class PaymentServiceImpl implements PaymentService {
     private String KEY;
     @Value("${razorpay.key_secret}")
     private String SECRET_KEY;
-    private final String CURRENCY="INR";
+    private final String CURRENCY="CZK";
 
 
     @Override
@@ -32,7 +32,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
 
-        return prepatreTransaction(order);
+        return prepareTransaction(order);
 
 
         }catch (Exception e){
@@ -42,7 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
 
-    private PaymentDetails prepatreTransaction(Order order){
+    private PaymentDetails prepareTransaction(Order order){
         String orderId=order.get("id");
         Integer amount=order.get("amount");
         String currency=order.get("currency");
